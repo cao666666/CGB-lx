@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pt.member.dao.MemberDao">
+	<select id="findMembers" resultType="com.pt.member.entity.Member">
+		select * from t_members
+	</select>
+	
+	<select id="findPageObjects" resultType="com.pt.member.entity.Member">
+		select * from t_members
+		limit #{startIndex},#{pageSize}
+	</select>
+	<insert id="insertObject" 
+		parameterType="com.pt.member.entity.Member">
+		insert into t_members
+			(nickname,password,realname,gender,rank,email,mobile,safequestion,sageanser,createdTime)
+		values
+			(#{nickname},#{password},#{realname},#{gender},#{rank},#{email},#{mobile},#{safequestion},#{safeanswer},#{createdTime})
+	</insert>
+	
+	<resultMap type="cn.tedu.pojo.Door" id="doorRM" >
+		<id column="id" property="id"/>
+		<result column="door_name" property="doorName"/>
+		<result column="door_tel" property="doorTel"/>
+	</resultMap>
+	
+	<select id="findDoor" resultMap="doorRM">
+		select * from tb_door
+	</select>
+  
+</mapper>

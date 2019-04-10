@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.dao.UserInfoDao">
+	<resultMap type="cn.tedu.pojo.UserInfo" id="userInfoRM">
+		<!-- 描述主键id column="" 表中的字段名 property="" 实体中的属性名 -->
+		<id column="id" property="id" />
+		<!-- 描述普通字段信息 -->
+		<result column="user_name" property="userName" />
+		<result column="user_addr" property="userAddr" />
+		<result column="user_age" property="userAge" />
+	</resultMap>
+	
+	<!-- 绑定一对一的suerextra的关系 -->
+	<resultMap type="cn.tedu.pojo.UserInfo" id="userExtraRM"
+		extends="userInfoRM">
+
+		<!-- association用来描述一对一关系 property="userExtra" 在UserInfo中的属性 javaType="" 
+			关联对象的类的全路径... -->
+		<association property="userExtra" javaType="cn.tedu.pojo.UserExtra">
+			<!-- 描述UserExtra信息... -->
+			<id column="id" property="id" />
+			<result column="work" property="work" />
+			<result column="salary" property="salary" />
+			<result column="user_id" property="userId" />
+		</association>
+	</resultMap>
+  	<select id="findExtraByUser" resultMap="userExtraRM">
+  		select * from
+  			user_info t1,
+  			user_extra t2
+  		where 
+  			t1.id=t2.user_id
+  		and 
+  			t1.id=#{id}
+  	</select>
+  	
+  	
+  	<!-- 绑定一对多的对象关系的order -->
+  	<resultMap type="UserInfo" id="orderRM" extends="userInfoRM">
+  		<!-- 描述多的一方orders -->
+  		<collection property="orders" ofType="cn.tedu.pojo.Orders">
+  			<id column="oid" property="id"/>
+  			<result column="User_id" property="userId"/>
+  			<result column="Order_no" property="orderNo"/>
+  			<result column="Order_desc" property="orderDesc"/>
+  			<result column="Price" property="price"/>
+  		</collection>
+  	</resultMap>
+  	<select id="findOrderdByUser" resultMap="orderRM">
+  		select t1.id,t1.user_name,t1.user_addr,t1.user_age,t2.id as oid,t2.User_id,t2.Order_desc,t2.Price from user_info t1,orders t2 where t1.id=t2.user_id and t1.id=#{id}
+  	</select>
+  	
+</mapper>
